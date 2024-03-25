@@ -7,9 +7,13 @@ import pwnagotchi.ui.faces as faces
 import pwnagotchi.plugins as plugins
 
 # Installing:
-# Move plugin file to /usr/local/pwnagotchi/plugins
-# Add this to your pwnagotchi config (/etc/pnagotchi/config.yml):
-# custom_plugins: /usr/local/pwnagotchi/plugins
+
+# Move plugin file to your custom plugins directory `sudo cat /etc/pwnagotchi/config.toml | grep main.custom_plugins` 
+# Add this to your pwnagotchi config (/etc/pwnagotchi/config.yml):
+
+#main.plugins.discord.enabled = true
+#main.plugins.discord.webhook_url = "webhook-url-here"
+
 
 # Testing:
 # You can trigger the webhook to rerun without a new session by deleting the session file:
@@ -18,8 +22,8 @@ import pwnagotchi.plugins as plugins
 # counter on screen how many blind epochs, internet conenctivity icon?
 
 class Discord(plugins.Plugin):
-    __author__ = 'charagarlnad'
-    __version__ = '1.1.0'
+    __author__ = 'charagarlnad, changes for opwngrid/jay base image by rai@discord '
+    __version__ = '1.1.1'
     __license__ = 'GPL3'
     __description__ = 'Sends Pwnagotchi status webhooks to Discord.'
 
@@ -34,6 +38,8 @@ class Discord(plugins.Plugin):
             logging.info('Detected a new session and internet connectivity!')
 
             # NOT /root/pwnagotchi.png, as we want to send the screen as it is _before_ the sending status update is shown.
+
+            # need to find where this is on jays image
             picture = '/dev/shm/pwnagotchi.png'
 
             display.on_manual_mode(last_session)
@@ -93,10 +99,11 @@ class Discord(plugins.Plugin):
                         }
                     ]
                 }
-
-                with open(picture,'rb') as image:
-                    requests.post(self.options['webhook_url'], files={'image': image, 'payload_json': (None, json.dumps(data))})
-
+                try:
+                    with open(picture,'rb') as image:
+                        requests.post(self.options['webhook_url'], files={'image': image, 'payload_json': (None, json.dumps(data))})
+                except:
+                    requests.post(self.options['webhook_url'], files={'payload_json': (None, json.dumps(data))})
                 # This kinda sucks as the saved session ID is global for all plugins, and was added to core only for the twitter plugin
                 # So the Discord plugin as of now is incompatable with the Twitter plugin
                 # If the session saving could be modified to either be unique for every plugin or each plugin has to implement it itself it should be better
