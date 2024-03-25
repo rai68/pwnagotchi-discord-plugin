@@ -10,10 +10,6 @@ import pwnagotchi.plugins as plugins
 # Move plugin file to /usr/local/pwnagotchi/plugins
 # Add this to your pwnagotchi config (/etc/pnagotchi/config.yml):
 # custom_plugins: /usr/local/pwnagotchi/plugins
-# plugins:
-#   discord:
-#     enabled: true
-#     webhook_url: 'YOUR_URL_HERE'
 
 # Testing:
 # You can trigger the webhook to rerun without a new session by deleting the session file:
@@ -55,7 +51,7 @@ class Discord(plugins.Plugin):
                             'title': 'Pwnagotchi Status',
                             'color': 3553599,
                             'description': 'New Pwnagotchi status update available! Here\'s some stats from the last session:',
-                            'url': f'https://pwnagotchi.ai/pwnfile/#!{agent.fingerprint()}',
+                            'url': f'https://opwngrid.xyz/search/{agent.fingerprint()}',
                             'fields': [
                                 {
                                     'name': 'Uptime',
@@ -89,7 +85,7 @@ class Discord(plugins.Plugin):
                                 }
                             ],
                             'footer': {
-                                'text': f'Pwnagotchi v{pwnagotchi.version} - Discord Plugin v{self.__version__}'
+                                'text': f'Pwnagotchi v{pwnagotchi.__version__} - Discord Plugin v{self.__version__}'
                             },
                             'image': {
                                 'url': 'attachment://pwnagotchi.png'
